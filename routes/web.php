@@ -41,12 +41,13 @@ Route::middleware(['auth', 'verified'])->prefix('my-bookings')->name('bookings.'
 
 // Admin routes
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('books', AdminBookController::class)->except(['show']);
+    Route::resource('books', AdminBookController::class);
     Route::resource('categories', AdminCategoryController::class)->except(['show']);
     Route::get('bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::patch('bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('bookings.confirm');
     Route::delete('bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('bookings.destroy');
     Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
     Route::patch('users/{user}/ban', [AdminUserController::class, 'toggleBan'])->name('users.ban');
     Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 });

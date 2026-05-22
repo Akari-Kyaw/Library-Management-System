@@ -23,8 +23,8 @@ class BookingController extends Controller
                 'time'         => $b->time,
                 'status'       => $b->status ?? ($b->IsActive ? 'pending' : 'returned'),
                 'IsActive'     => $b->IsActive,
-                'book'         => $b->book ? ['name' => $b->book->name, 'ISBN' => $b->book->ISBN] : null,
-                'user'         => $b->user ? ['name' => $b->user->name, 'email' => $b->user->email] : null,
+                'book'         => $b->book ? ['id' => $b->book->id, 'name' => $b->book->name, 'ISBN' => $b->book->ISBN] : null,
+                'user'         => $b->user ? ['id' => $b->user->id, 'name' => $b->user->name, 'email' => $b->user->email] : null,
             ]);
 
         return Inertia::render('admin/bookings/index', [

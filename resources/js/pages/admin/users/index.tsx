@@ -1,5 +1,5 @@
-import { Head, router, usePage } from '@inertiajs/react';
-import { Ban, ShieldCheck, Trash2, Users } from 'lucide-react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Ban, Eye, ShieldCheck, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -109,6 +109,12 @@ export default function AdminUsersIndex() {
                                         </td>
                                         <td className="px-4 py-3 text-muted-foreground">{user.created_at}</td>
                                         <td className="px-4 py-3 text-right">
+                                            <Button asChild variant="ghost" size="icon" title="View user">
+                                                <Link href={`/admin/users/${user.id}`}>
+                                                    <Eye className="size-4" />
+                                                    <span className="sr-only">View</span>
+                                                </Link>
+                                            </Button>
                                             {user.role !== 'admin' && (
                                                 <Button
                                                     variant="ghost"

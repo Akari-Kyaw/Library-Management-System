@@ -1,5 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -107,6 +107,12 @@ export default function AdminBooksIndex() {
                                         </td>
                                         <td className="px-4 py-3">
                                             <div className="flex justify-end gap-2">
+                                                <Button asChild variant="ghost" size="icon">
+                                                    <Link href={`/admin/books/${book.id}`}>
+                                                        <Eye className="size-4" />
+                                                        <span className="sr-only">View</span>
+                                                    </Link>
+                                                </Button>
                                                 <Button asChild variant="ghost" size="icon">
                                                     <Link href={`/admin/books/${book.id}/edit`}>
                                                         <Pencil className="size-4" />

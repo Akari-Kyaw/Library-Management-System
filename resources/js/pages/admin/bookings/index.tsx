@@ -1,4 +1,4 @@
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Check, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -21,8 +21,8 @@ type Booking = {
     time: string;
     status: 'pending' | 'confirmed' | 'returned';
     IsActive: boolean;
-    book: { name: string; ISBN: string } | null;
-    user: { name: string; email: string } | null;
+    book: { id: number; name: string; ISBN: string } | null;
+    user: { id: number; name: string; email: string } | null;
 };
 
 type Props = SharedData & { bookings: Booking[] };
@@ -109,11 +109,27 @@ export default function AdminBookingsIndex() {
                                     <tr key={booking.id} className="transition-colors hover:bg-muted/30">
                                         <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
                                         <td className="px-4 py-3">
-                                            <div className="font-medium">{booking.user?.name ?? '—'}</div>
+                                            <div className="font-medium">
+                                                {booking.user ? (
+                                                    <Link href={`/admin/users/${booking.user.id}`} className="hover:underline">
+                                                        {booking.user.name}
+                                                    </Link>
+                                                ) : (
+                                                    '—'
+                                                )}
+                                            </div>
                                             <div className="text-xs text-muted-foreground">{booking.user?.email}</div>
                                         </td>
                                         <td className="px-4 py-3">
-                                            <div className="font-medium">{booking.book?.name ?? '—'}</div>
+                                            <div className="font-medium">
+                                                {booking.book ? (
+                                                    <Link href={`/admin/books/${booking.book.id}`} className="hover:underline">
+                                                        {booking.book.name}
+                                                    </Link>
+                                                ) : (
+                                                    '—'
+                                                )}
+                                            </div>
                                             <div className="font-mono text-xs text-muted-foreground">{booking.book?.ISBN}</div>
                                         </td>
                                         <td className="px-4 py-3 text-muted-foreground">{booking.booking_date}</td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Books;
 use App\Models\Categories;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +43,53 @@ class BookController extends Controller
 
         return Inertia::render('admin/books/create', [
             'categories' => $categories,
+        ]);
+    }
+
+    public function show(Books $book): Response
+    {
+        $book->load('category')->loadCount(['likes', 'comments', 'favourites']);
+
+        $recentBookings = Booking::with('user')
+            ->where('bookId', $book->id)
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(fn ($booking) => [
+                'id' => $booking->id,
+                'booking_date' => $booking->booking_date?->format('Y-m-d'),
+                'due_date' => $booking->due_date?->format('Y-m-d'),
+                'time' => $booking->time,
+                'status' => $booking->status ?? ($booking->IsActive ? 'pending' : 'returned'),
+                'booking_type' => $booking->booking_type ?? 'pickup',
+                'user' => $booking->user ? [
+                    'id' => $booking->user->id,
+                    'name' => $booking->user->name,
+                    'email' => $booking->user->email,
+                ] : null,
+            ]);
+
+        return Inertia::render('admin/books/show', [
+            'book' => [
+                'id' => $book->id,
+                'name' => $book->name,
+                'ISBN' => $book->ISBN,
+                'author' => $book->author,
+                'published_date' => $book->published_date?->format('Y-m-d'),
+                'IsActive' => $book->IsActive,
+                'description' => $book->description,
+                'cover_image' => $book->cover_image ? Storage::url($book->cover_image) : null,
+                'pdf_url' => $book->pdf_file ? Storage::url($book->pdf_file) : null,
+                'category' => $book->category
+                    ? ['categoryName' => $book->category->categoryName]
+                    : null,
+                'likes_count' => $book->likes_count,
+                'comments_count' => $book->comments_count,
+                'favourites_count' => $book->favourites_count,
+                'created_at' => $book->created_at?->format('Y-m-d H:i'),
+                'updated_at' => $book->updated_at?->format('Y-m-d H:i'),
+            ],
+            'recentBookings' => $recentBookings,
         ]);
     }
 
